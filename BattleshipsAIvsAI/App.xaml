@@ -1,0 +1,40 @@
+﻿<Application x:Class="BattleshipsAIvsAI.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:BattleshipsAIvsAI"
+             Startup="Application_Startup">
+    <Application.Resources>
+        <SolidColorBrush x:Key="DarkBlue" Color="#FF0062AD"/>
+
+        <Style x:Key="ImageDamagedShip"
+            TargetType="Image">
+            <Setter Property="Source" Value="Resources\DamagedShip.png"/>
+            <Setter Property="Margin" Value="0,1,7,0"/>
+        </Style>
+
+        <Style x:Key="ImageUnknown"
+            TargetType="Image">
+            <Setter Property="Source" Value="Resources\Unknown.png"/>
+            <Setter Property="Margin" Value="0,1,7,0"/>
+        </Style>
+
+        <Style x:Key="ImageMiss"
+            TargetType="Image">
+            <Setter Property="Source" Value="Resources\Miss.png"/>
+            <Setter Property="Margin" Value="0,1,7,0"/>
+        </Style>
+
+        <Style x:Key="ImageSinkedShip"
+            TargetType="Image">
+            <Setter Property="Source" Value="Resources\SinkedShip.png"/>
+            <Setter Property="Margin" Value="0,1,7,0"/>
+        </Style>
+
+        <Style x:Key="ImageUnbrokenShip"
+            TargetType="Image">
+            <Setter Property="Source" Value="Resources\UnbrokenShip.png"/>
+            <Setter Property="Margin" Value="0,1,7,0"/>
+        </Style>
+
+    </Application.Resources>
+</Application>

@@ -1,0 +1,480 @@
+﻿<Window x:Class="BattleshipsAIvsAI.MainView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BattleshipsAIvsAI"
+        mc:Ignorable="d"
+        
+        Icon="/BattleshipsAIvsAI;component/icon.ico" Height="560" Width="760" ResizeMode="NoResize" ShowInTaskbar="True" WindowStyle="None" AllowsTransparency="True" 
+        BorderThickness="0" WindowStartupLocation="CenterScreen" Background="Transparent">
+
+	<Window.Resources>
+
+		<SolidColorBrush x:Key="DarkBlue" Color="#FF0062AD"/>
+
+		<Style x:Key="Btn_Exit"
+               TargetType="Button">
+			<Style.Setters>
+				<Setter Property="Margin" Value="5" />
+				<Setter Property="Width" Value="16" />
+				<Setter Property="Height" Value="16" />
+				<Setter Property="Focusable" Value="False" />
+				<Setter Property="BorderThickness" Value="0" />
+				<Setter Property="Template">
+					<Setter.Value>
+						<ControlTemplate>
+							<Image Source="/BattleshipsAIvsAI;component/Resources/cancel_black.png" />
+						</ControlTemplate>
+					</Setter.Value>
+				</Setter>
+			</Style.Setters>
+			<Style.Triggers>
+				<Trigger Property="IsMouseOver" Value="true">
+					<Setter Property="Template">
+						<Setter.Value>
+							<ControlTemplate>
+								<Image Source="/BattleshipsAIvsAI;component/Resources/cancel_blue.png" />
+							</ControlTemplate>
+						</Setter.Value>
+					</Setter>
+				</Trigger>
+			</Style.Triggers>
+		</Style>
+
+		<Style TargetType="Button" x:Key="Btn_Controls">
+
+			<Setter Property="FontSize" Value="13"/>
+			<Setter Property="Focusable" Value="False"/>
+
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="Button">
+						<Border                            
+        					x:Name="Border"  
+        					Background="#FFE1E1E2"                     
+        					Margin="2" Opacity="0.7">
+							<ContentPresenter Margin="4" TextBlock.FontSize="25" TextBlock.Foreground="{DynamicResource DarkBlue}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+						</Border>
+
+						<ControlTemplate.Triggers>
+							<Trigger Property="IsMouseOver" Value="true">
+								<Setter TargetName="Border" Property="Background" Value="#FFE1E1E2"/>
+								<Setter TargetName="Border" Property="Opacity" Value="0.9"/>
+							</Trigger>
+
+							<Trigger Property="IsPressed" Value="true">
+								<Setter TargetName="Border" Property="Background" Value="#FFE1E1E2"/>
+								<Setter TargetName="Border" Property="Opacity" Value="1"/>
+							</Trigger>
+						</ControlTemplate.Triggers>
+
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+
+		<Style x:Key="ItemContainer"
+         TargetType="ComboBoxItem">
+			<Setter Property="OverridesDefaultStyle" Value="true" />
+			<Setter Property="Focusable" Value="False"/>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="ComboBoxItem">
+						<Border Name="border">
+							<ContentPresenter Name="cp" Margin="5,0,0,0"/>
+						</Border>
+						<ControlTemplate.Triggers>
+							<Trigger Property="IsMouseOver" Value="true">
+								<Setter TargetName="border" Property="Background" Value="{DynamicResource DarkBlue}"/>
+								<Setter TargetName="cp" Property="TextBlock.Foreground" Value="White"/>
+							</Trigger>
+						</ControlTemplate.Triggers>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+
+		<Style x:Key="ComboBox"
+               TargetType="ComboBox">
+			<Setter Property="Height" Value="22"/>
+			<Setter Property="MaxDropDownHeight" Value="162"/>
+			<Setter Property="ItemContainerStyle" Value="{StaticResource ItemContainer}"/>
+			<Setter Property="Focusable" Value="False"/>
+		</Style>
+
+	</Window.Resources>
+
+	<Grid Margin="5">
+		<Grid.Effect>
+			<DropShadowEffect RenderingBias="Quality" Color="Black" ShadowDepth="0"  Opacity="0.5"/>
+		</Grid.Effect>
+
+		<Grid Name="MainGrid"
+          MouseLeftButtonDown="Grid_MouseLeftButtonDown" Background="WhiteSmoke" d:IsEffectDisabled="True">
+
+			<Grid.Effect>
+				<BlurEffect Radius="{Binding BlurEffectRadius}"/>
+			</Grid.Effect>
+
+			<Grid.RowDefinitions>
+				<RowDefinition Height="*"/>
+				<RowDefinition Height="5*"/>
+				<RowDefinition Height="*"/>
+			</Grid.RowDefinitions>
+
+			<Grid Grid.Row="0">
+				<Label Content="Battleships AI vs AI" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="30" Foreground="{StaticResource DarkBlue}"/>
+				<Button Style="{StaticResource Btn_Exit}" HorizontalAlignment="Right" VerticalAlignment="Top" Command="{Binding Exit}"/>
+			</Grid>
+			
+
+			<Grid Grid.Row="1">
+
+				<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+
+					<StackPanel>
+						<Label Content="{Binding NamePlayer1}" FontSize="15" HorizontalAlignment="Center"/>
+						<Grid Height="340" Width="340" Margin="15,5,15,15">
+
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition/>
+								<ColumnDefinition/>
+								<ColumnDefinition/>
+								<ColumnDefinition/>
+								<ColumnDefinition/>
+								<ColumnDefinition/>
+								<ColumnDefinition/>
+								<ColumnDefinition/>
+								<ColumnDefinition/>
+								<ColumnDefinition/>
+							</Grid.ColumnDefinitions>
+
+							<ListView Grid.Column="0"
+                                      ItemsSource="{Binding FirstPlayerField.PlayerField[0]}" 
+                                      Background="Transparent"
+                                      BorderThickness="0"
+                                      ScrollViewer.HorizontalScrollBarVisibility="Hidden">
+								<ListView.ItemTemplate>
+									<DataTemplate>
+										<Image Height="25" Width="25" Source="{Binding}" Margin="1"/>
+									</DataTemplate>
+								</ListView.ItemTemplate>
+							</ListView>
+
+							<ListView Grid.Column="1"
+                                      ItemsSource="{Binding FirstPlayerField.PlayerField[1]}" 
+                                      Background="Transparent"
+                                      BorderThickness="0"
+                                      ScrollViewer.HorizontalScrollBarVisibility="Hidden">
+								<ListView.ItemTemplate>
+									<DataTemplate>
+										<Image Height="25" Width="25" Source="{Binding}" Margin="1"/>
+									</DataTemplate>
+								</ListView.ItemTemplate>
+							</ListView>
+
+							<ListView Grid.Column="2"
+                                      ItemsSource="{Binding FirstPlayerField.PlayerField[2]}" 
+                                      Background="Transparent"
+                                      BorderThickness="0"
+                                      ScrollViewer.HorizontalScrollBarVisibility="Hidden">
+								<ListView.ItemTemplate>
+									<DataTemplate>
+										<Image Height="25" Width="25" Source="{Binding}" Margin="1"/>
+									</DataTemplate>
+								</ListView.ItemTemplate>
+							</ListView>
+
+							<ListView Grid.Column="3"
+                                      ItemsSource="{Binding FirstPlayerField.PlayerField[3]}" 
+                                      Background="Transparent"
+                                      BorderThickness="0"
+                                      ScrollViewer.HorizontalScrollBarVisibility="Hidden">
+								<ListView.ItemTemplate>
+									<DataTemplate>
+										<Image Height="25" Width="25" Source="{Binding}" Margin="1"/>
+									</DataTemplate>
+								</ListView.ItemTemplate>
+							</ListView>
+
+							<ListView Grid.Column="4"
+                                      ItemsSource="{Binding FirstPlayerField.PlayerField[4]}" 
+                                      Background="Transparent"
+                                      BorderThickness="0"
+                                      ScrollViewer.HorizontalScrollBarVisibility="Hidden">
+								<ListView.ItemTemplate>
+									<DataTemplate>
+										<Image Height="25" Width="25" Source="{Binding}" Margin="1"/>
+									</DataTemplate>
+								</ListView.ItemTemplate>
+							</ListView>
+
+							<ListView Grid.Column="5"
+                                      ItemsSource="{Binding FirstPlayerField.PlayerField[5]}" 
+                                      Background="Transparent"
+                                      BorderThickness="0"
+                                      ScrollViewer.HorizontalScrollBarVisibility="Hidden">
+								<ListView.ItemTemplate>
+									<DataTemplate>
+										<Image Height="25" Width="25" Source="{Binding}" Margin="1"/>
+									</DataTemplate>
+								</ListView.ItemTemplate>
+							</ListView>
+
+							<ListView Grid.Column="6"
+                                      ItemsSource="{Binding FirstPlayerField.PlayerField[6]}" 
+                                      Background="Transparent"
+                                      BorderThickness="0"
+                                      ScrollViewer.HorizontalScrollBarVisibility="Hidden">
+								<ListView.ItemTemplate>
+									<DataTemplate>
+										<Image Height="25" Width="25" Source="{Binding}" Margin="1"/>
+									</DataTemplate>
+								</ListView.ItemTemplate>
+							</ListView>
+
+							<ListView Grid.Column="7"
+                                      ItemsSource="{Binding FirstPlayerField.PlayerField[7]}" 
+                                      Background="Transparent"
+                                      BorderThickness="0"
+                                      ScrollViewer.HorizontalScrollBarVisibility="Hidden">
+								<ListView.ItemTemplate>
+									<DataTemplate>
+										<Image Height="25" Width="25" Source="{Binding}" Margin="1"/>
+									</DataTemplate>
+								</ListView.ItemTemplate>
+							</ListView>
+
+							<ListView Grid.Column="8"
+                                      ItemsSource="{Binding FirstPlayerField.PlayerField[8]}" 
+                                      Background="Transparent"
+                                      BorderThickness="0"
+                                      ScrollViewer.HorizontalScrollBarVisibility="Hidden">
+								<ListView.ItemTemplate>
+									<DataTemplate>
+										<Image Height="25" Width="25" Source="{Binding}" Margin="1"/>
+									</DataTemplate>
+								</ListView.ItemTemplate>
+							</ListView>
+
+							<ListView Grid.Column="9"
+                                      ItemsSource="{Binding FirstPlayerField.PlayerField[9]}" 
+                                      Background="Transparent"
+                                      BorderThickness="0"
+                                      ScrollViewer.HorizontalScrollBarVisibility="Hidden">
+								<ListView.ItemTemplate>
+									<DataTemplate>
+										<Image Height="25" Width="25" Source="{Binding}" Margin="1"/>
+									</DataTemplate>
+								</ListView.ItemTemplate>
+							</ListView>
+
+						</Grid>
+					</StackPanel>
+
+					<Line Y1="0" Y2="310" Margin="0,15,5,0" X1="0" X2="0" VerticalAlignment="Center" Stroke="{DynamicResource DarkBlue}"/>
+
+					<StackPanel>
+						<Label Content="{Binding NamePlayer2}" FontSize="15" HorizontalAlignment="Center"/>
+						<Grid Height="340" Width="340" Margin="15,5,15,15">
+
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition/>
+								<ColumnDefinition/>
+								<ColumnDefinition/>
+								<ColumnDefinition/>
+								<ColumnDefinition/>
+								<ColumnDefinition/>
+								<ColumnDefinition/>
+								<ColumnDefinition/>
+								<ColumnDefinition/>
+								<ColumnDefinition/>
+							</Grid.ColumnDefinitions>
+
+							<ListView Grid.Column="0"
+                                      ItemsSource="{Binding SecondPlayerField.PlayerField[0]}" 
+                                      Background="Transparent"
+                                      BorderThickness="0"
+                                      ScrollViewer.HorizontalScrollBarVisibility="Hidden">
+								<ListView.ItemTemplate>
+									<DataTemplate>
+										<Image Height="25" Width="25" Source="{Binding}" Margin="1"/>
+									</DataTemplate>
+								</ListView.ItemTemplate>
+							</ListView>
+
+							<ListView Grid.Column="1"
+                                      ItemsSource="{Binding SecondPlayerField.PlayerField[1]}" 
+                                      Background="Transparent"
+                                      BorderThickness="0"
+                                      ScrollViewer.HorizontalScrollBarVisibility="Hidden">
+								<ListView.ItemTemplate>
+									<DataTemplate>
+										<Image Height="25" Width="25" Source="{Binding}" Margin="1"/>
+									</DataTemplate>
+								</ListView.ItemTemplate>
+							</ListView>
+
+							<ListView Grid.Column="2"
+                                      ItemsSource="{Binding SecondPlayerField.PlayerField[2]}" 
+                                      Background="Transparent"
+                                      BorderThickness="0"
+                                      ScrollViewer.HorizontalScrollBarVisibility="Hidden">
+								<ListView.ItemTemplate>
+									<DataTemplate>
+										<Image Height="25" Width="25" Source="{Binding}" Margin="1"/>
+									</DataTemplate>
+								</ListView.ItemTemplate>
+							</ListView>
+
+							<ListView Grid.Column="3"
+                                      ItemsSource="{Binding SecondPlayerField.PlayerField[3]}" 
+                                      Background="Transparent"
+                                      BorderThickness="0"
+                                      ScrollViewer.HorizontalScrollBarVisibility="Hidden">
+								<ListView.ItemTemplate>
+									<DataTemplate>
+										<Image Height="25" Width="25" Source="{Binding}" Margin="1"/>
+									</DataTemplate>
+								</ListView.ItemTemplate>
+							</ListView>
+
+							<ListView Grid.Column="4"
+                                      ItemsSource="{Binding SecondPlayerField.PlayerField[4]}" 
+                                      Background="Transparent"
+                                      BorderThickness="0"
+                                      ScrollViewer.HorizontalScrollBarVisibility="Hidden">
+								<ListView.ItemTemplate>
+									<DataTemplate>
+										<Image Height="25" Width="25" Source="{Binding}" Margin="1"/>
+									</DataTemplate>
+								</ListView.ItemTemplate>
+							</ListView>
+
+							<ListView Grid.Column="5"
+                                      ItemsSource="{Binding SecondPlayerField.PlayerField[5]}" 
+                                      Background="Transparent"
+                                      BorderThickness="0"
+                                      ScrollViewer.HorizontalScrollBarVisibility="Hidden">
+								<ListView.ItemTemplate>
+									<DataTemplate>
+										<Image Height="25" Width="25" Source="{Binding}" Margin="1"/>
+									</DataTemplate>
+								</ListView.ItemTemplate>
+							</ListView>
+
+							<ListView Grid.Column="6"
+                                      ItemsSource="{Binding SecondPlayerField.PlayerField[6]}" 
+                                      Background="Transparent"
+                                      BorderThickness="0"
+                                      ScrollViewer.HorizontalScrollBarVisibility="Hidden">
+								<ListView.ItemTemplate>
+									<DataTemplate>
+										<Image Height="25" Width="25" Source="{Binding}" Margin="1"/>
+									</DataTemplate>
+								</ListView.ItemTemplate>
+							</ListView>
+
+							<ListView Grid.Column="7"
+                                      ItemsSource="{Binding SecondPlayerField.PlayerField[7]}" 
+                                      Background="Transparent"
+                                      BorderThickness="0"
+                                      ScrollViewer.HorizontalScrollBarVisibility="Hidden">
+								<ListView.ItemTemplate>
+									<DataTemplate>
+										<Image Height="25" Width="25" Source="{Binding}" Margin="1"/>
+									</DataTemplate>
+								</ListView.ItemTemplate>
+							</ListView>
+
+							<ListView Grid.Column="8"
+                                      ItemsSource="{Binding SecondPlayerField.PlayerField[8]}" 
+                                      Background="Transparent"
+                                      BorderThickness="0"
+                                      ScrollViewer.HorizontalScrollBarVisibility="Hidden">
+								<ListView.ItemTemplate>
+									<DataTemplate>
+										<Image Height="25" Width="25" Source="{Binding}" Margin="1"/>
+									</DataTemplate>
+								</ListView.ItemTemplate>
+							</ListView>
+
+							<ListView Grid.Column="9"
+                                      ItemsSource="{Binding SecondPlayerField.PlayerField[9]}" 
+                                      Background="Transparent"
+                                      BorderThickness="0"
+                                      ScrollViewer.HorizontalScrollBarVisibility="Hidden">
+								<ListView.ItemTemplate>
+									<DataTemplate>
+										<Image Height="25" Width="25" Source="{Binding}" Margin="1"/>
+									</DataTemplate>
+								</ListView.ItemTemplate>
+							</ListView>
+
+						</Grid>
+					</StackPanel>
+
+				</StackPanel>
+
+			</Grid>
+
+			<Grid Grid.Row="1" Background="Transparent"/>
+
+			<Grid Grid.Row="2">
+
+				<StackPanel HorizontalAlignment="Left">
+					<StackPanel Orientation="Horizontal">
+						<Label Content="Соревнование"/>
+						<ComboBox Name="CB_Competitions" Style="{StaticResource ComboBox}" ItemsSource="{Binding CompetitionLabelList}" SelectedItem="{Binding CurrentLabelCompetition}"/>
+					</StackPanel>
+
+					<StackPanel Orientation="Horizontal">
+						<Label Content="Игра"/>
+						<ComboBox Name="CB_Games" Style="{StaticResource ComboBox}" ItemsSource="{Binding GameLabelList}" SelectedItem="{Binding CurrentLabelGame}"/>
+					</StackPanel>
+
+					<StackPanel Name="SP_PB_loadingGameLog" Visibility="Collapsed">
+						<ProgressBar IsIndeterminate="True"  Margin="0,5,0,0" Foreground="{DynamicResource DarkBlue}" Background="Transparent" Height="3"/>
+						<Label Name="Lbl_loadingGameLog" Content="Загрузка лога" FontSize="7" HorizontalAlignment="Center" Margin="0,-5,0,0" Foreground="Gray" />
+					</StackPanel>
+				</StackPanel>
+
+				<Button Name="Btn_StartVisualisation" Style="{StaticResource Btn_Controls}" Height="50" Width="100" Content="Старт" Margin="10" Command="{Binding DisplayDame}"/>
+
+			</Grid>
+
+		</Grid>
+
+		<Grid Name="StartProgrammGrid"
+               MouseLeftButtonDown="Grid_MouseLeftButtonDown" Visibility="{Binding StartProgrammGridVisibility}">
+			<Grid Background="Gray" Opacity="0.2" d:IsHidden="True"/>
+
+			<StackPanel Margin="120" Background="White" d:IsHidden="True">
+
+				<StackPanel HorizontalAlignment="Center" Margin="50,50,50,10">
+					<Label Content="Количество игр:" Foreground="{DynamicResource DarkBlue}" FontSize="30" HorizontalAlignment="Center" />
+					<TextBox Margin="10" Height="32" MinWidth="60" MaxHeight="160" FontSize="24" HorizontalAlignment="Center" Text="{Binding NumberOfGames, UpdateSourceTrigger=PropertyChanged}"/>
+					<Label Content="Входная строка имеет неверный формат!" Foreground="Red" FontSize="15" Visibility="{Binding StartProgrammErrorMessageVisibility}"/>
+				</StackPanel>
+
+				<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+					<Button Style="{StaticResource Btn_Controls}" Content="Старт" Width="130" Height="50" Margin="5"  Command="{Binding СalculateGlobalStatistics}"/>
+					<Button Style="{StaticResource Btn_Controls}" Content="Выход" Width="130" Height="50" Margin="5" Command="{Binding Exit}"/>
+				</StackPanel>
+
+				<StackPanel Visibility="{Binding StartProgrammPBarRegionVisibility, Mode=TwoWay}" Margin="0,10,0,0">
+					<Label Content="Обработка..." HorizontalAlignment="Center" Foreground="Gray"/>
+					<ProgressBar Height="10" Foreground="{DynamicResource DarkBlue}" IsIndeterminate="True" Background="Transparent"/>
+				</StackPanel>
+
+
+				<StackPanel.Effect>
+					<DropShadowEffect RenderingBias="Quality" Color="Black" ShadowDepth="0" Opacity="0.5"/>
+				</StackPanel.Effect>
+			</StackPanel>
+		</Grid>
+
+	
+	</Grid>
+</Window>
